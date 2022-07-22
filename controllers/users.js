@@ -44,8 +44,8 @@ const updateProfile = (req, res, next) => {
     req.user._id,
     { name, about },
     {
-      new: true, // then получит на вход обновлённую запись
-      runValidators: true, // валидация данных при изменении
+      new: true,
+      runValidators: true,
     },
   )
     .then((user) => { res.send(user); })
@@ -65,8 +65,8 @@ const updateAvatar = (req, res, next) => {
     req.user._id,
     { avatar },
     {
-      new: true, // then получит на вход обновлённую запись
-      runValidators: true, // валидация данных при изменении
+      new: true,
+      runValidators: true,
     },
   )
     .then((user) => { res.send(user); })
