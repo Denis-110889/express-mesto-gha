@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 class NoValidId extends Error {
   constructor(message) {
     super(message);

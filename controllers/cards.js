@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const Card = require('../models/card');
 const { ValidationError } = require('../errors/ValidationError');
 const { NoValidId } = require('../errors/NoValidId');
