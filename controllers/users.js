@@ -27,7 +27,14 @@ const createUsers = (req, res, next) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      const data = {
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+      };
+      res.status(201).send(data);
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('400 - Переданы некорректные данные при создании пользователя'));
