@@ -23,5 +23,14 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
+app.use((err, req, res, next) => {
+  if (err.statusCode) {
+    return res.status(err.statusCode).send({ message: err.message });
+  }
+  res.status(500).send({ message: err });
+
+  return next();
+});
+
 app.listen(PORT, () => {
 });
