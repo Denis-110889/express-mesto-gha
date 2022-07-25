@@ -40,6 +40,7 @@ const setLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
+    .orFail(new Error('NoValidId'))
     .then((card) => {
       res.send(card);
     })
@@ -58,6 +59,7 @@ const unsetLike = (req, res, next) => {
     { $pull: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
+    .orFail(new Error('NoValidId'))
     .then((card) => {
       res.send(card);
     })
