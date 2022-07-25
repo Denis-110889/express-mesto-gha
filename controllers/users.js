@@ -11,9 +11,10 @@ const findUsers = (req, res) => {
 
 const findUsersById = (req, res, next) => {
   User.findById(req.params.id)
+    .orFail(new Error('NoValidId'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'NoValidId') {
+      if (err.message === 'NoValidId') {
         next(new NoValidId('404 - Получение пользователя с несуществующим в БД id'));
       } else if (err.name === 'CastError') {
         next(new CastError('400 —  Получение пользователя с некорректным id'));
