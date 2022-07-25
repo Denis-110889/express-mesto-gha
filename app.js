@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const { NotFound } = require('./errors/NotFound');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -25,6 +26,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(errors());
+
+app.use((req, res, next) => {
+  next(new NotFound('404 - Страницы не существует'));
+});
 
 app.use((err, req, res, next) => {
   if (err.statusCode) {
