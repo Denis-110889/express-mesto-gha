@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const { ValidationError } = require('../errors/ValidationError');
 const { NoValidId } = require('../errors/NoValidId');
+const { CastError } = require('../errors/CastError');
 
 const returnCards = (req, res) => {
   Card.find({})
@@ -47,6 +48,8 @@ const setLike = (req, res, next) => {
     .catch((err) => {
       if (err.message === 'NoValidId') {
         next(new NoValidId('404 — Передан несуществующий _id'));
+      } else if (err.name === 'CastError') {
+        next(new CastError('400 —  Передан некорректный id'));
       } else {
         next(err);
       }
@@ -66,6 +69,8 @@ const unsetLike = (req, res, next) => {
     .catch((err) => {
       if (err.message === 'NoValidId') {
         next(new NoValidId('404 — Передан несуществующий _id'));
+      } else if (err.name === 'CastError') {
+        next(new CastError('400 —  Передан некорректный id'));
       } else {
         next(err);
       }
