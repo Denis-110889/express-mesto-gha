@@ -25,10 +25,13 @@ const createCards = (req, res, next) => {
 
 const deleteCards = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
+    .orFail(new Error('NoValidId'))
     .then((cardDeleted) => res.send(cardDeleted))
     .catch((err) => {
       if (err.message === 'NoValidId') {
         next(new NoValidId('404 - Карточка с указанным _id не найдена'));
+      } else if (err.name === 'CastError') {
+        next(new CastError('400 —  Получение каточки с некорректным id'));
       } else {
         next(err);
       }
