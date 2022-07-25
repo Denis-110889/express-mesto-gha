@@ -37,6 +37,7 @@ const createUsers = (req, res, next) => {
       res.status(201).send(data);
     })
     .catch((err) => {
+      res.status(400).send(err.message);
       if (err.name === 'ValidationError') {
         next(new ValidationError('400 - Переданы некорректные данные при создании пользователя'));
       } else {
