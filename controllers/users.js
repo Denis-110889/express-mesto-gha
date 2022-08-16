@@ -44,6 +44,7 @@ const createUsers = (req, res, next) => {
       .catch((err) => {
         if (err.code === 11000) {
           next(new ConflictError('409 - Пользователь с такой почтой уже существует'));
+          res.status(409);
         } else if (err.name === 'ValidationError') {
           next(new ValidationError('400 - Некорректные данные при создании пользователя'));
         } else {
