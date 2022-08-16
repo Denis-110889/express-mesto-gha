@@ -1,23 +1,24 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const {
+  login,
+  createUsers,
+} = require('./controllers/users');
+const { isAuthorized } = require('./middlewares/auth');
 const { NotFound } = require('./errors/NotFound');
 
-const { PORT = 3000 } = process.env;
-const app = express();
-const create = (req, res, next) => {
-  req.user = {
-    _id: '62d965d0b856d0271cede4b5',
-  };
-  next();
-};
+const { REG_LINK } = require('./const/const');
 
+const app = express();
+
+app.disable('x-powered-by');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(create);
-app.use('/', require('./routes/users'));
-app.use('/', require('./routes/cards'));
+
+const { PORT = 3000 } = process.env;
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -25,11 +26,33 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
-app.use(errors());
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), login);
+
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(REG_LINK),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), createUsers);
+
+app.use(isAuthorized);
+
+app.use('/', require('./routes/users'));
+app.use('/', require('./routes/cards'));
 
 app.use((req, res, next) => {
   next(new NotFound('404 - Страницы не существует'));
 });
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   if (err.statusCode) {
