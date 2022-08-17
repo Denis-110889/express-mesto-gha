@@ -40,6 +40,7 @@ const createUsers = (req, res, next) => {
           email: user.email,
         };
         res.status(201).send(data);
+        console.log(12345);
       })
       .catch((err) => {
         if (err.code === 11000) {
