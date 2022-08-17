@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { ConflictError } = require('../errors/ConflictError');
 const { ValidationError } = require('../errors/ValidationError');
-const { NoValidId } = require('../errors/NoValidId');
+// const { NoValidId } = require('../errors/NoValidId');
 const { CastError } = require('../errors/CastError');
 
 const login = (req, res, next) => {
