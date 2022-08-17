@@ -2,8 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
-const { celebrate, Joi } = require('celebrate');
-const { errors } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 
 const {
   login,
