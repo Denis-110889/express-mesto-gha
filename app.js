@@ -44,8 +44,7 @@ app.use(isAuthorized);
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
-})
-  .then(() => console.log('connect'));
+});
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
