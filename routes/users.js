@@ -14,6 +14,8 @@ const {
 router.get('/users/me', returnUser);
 router.get('/users', findUsers);
 
+// не особо понял что сделать даже прочитав документацию, решил пойти по способу 2
+
 router.get('/users/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().length(24),
