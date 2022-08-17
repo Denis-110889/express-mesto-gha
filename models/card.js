@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-const cardSchema = new mongoose.Schema({
+const { REG_LINK } = require('../const/const');
+
+const cardSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -10,7 +12,12 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    ref: '',
+    validate: {
+      validator(link) {
+        return REG_LINK.test(link);
+      },
+      message: () => 'Неверный формат ссылки на изображение',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
