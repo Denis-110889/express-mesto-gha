@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 class TrowUnauthorizedError extends Error {
   constructor(message) {
     super(message);
