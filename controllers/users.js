@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { ConflictError } = require('../errors/ConflictError');
 const { ValidationError } = require('../errors/ValidationError');
-// const { NoValidId } = require('../errors/NoValidId');
+const { NoValidId } = require('../errors/NoValidId');
 const { CastError } = require('../errors/CastError');
 
 const login = (req, res, next) => {
@@ -62,12 +62,14 @@ const returnUser = (req, res, next) => {
 
 const findUsersById = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail(Error('NoValidId'))
+    .orFail(new Error('NoValidId'))
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.message === 'CastError') {
+      if (err.message === 'NoValidId') {
+        next(new NoValidId('404 - Получение пользователя с несуществующим в БД id'));
+      } else if (err.message === 'CastError') {
         next(new CastError('400 —  Получение пользователя с некорректным id'));
       } else {
         next(err);
