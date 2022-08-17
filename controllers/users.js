@@ -44,9 +44,8 @@ const createUsers = (req, res, next) => {
       .catch((err) => {
         if (err.code === 11000) {
           next(new ConflictError('409 - Пользователь с такой почтой уже существует'));
-          res.status(409);
         } else if (err.name === 'ValidationError') {
-          next(new ValidationError('400 - Некорректные данные при создании пользователя'));
+          next(new ValidationError('400 - Переданы некорректные данные при создании пользователя'));
         } else {
           next(err);
         }
@@ -71,9 +70,9 @@ const findUsersById = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.message === 'NoValidId') {
-        next(new NoValidId('404 - Пользователь с несуществующим в БД id'));
-      } else if (err.name === 'CastError') {
-        next(new CastError('400 —  Пользователь с некорректным id'));
+        next(new NoValidId('404 - Получение пользователя с несуществующим в БД id'));
+      } else if (err.message === 'CastError') {
+        next(new CastError('400 —  Получение пользователя с некорректным id'));
       } else {
         next(err);
       }
@@ -94,7 +93,7 @@ const updateProfile = (req, res, next) => {
     .then((user) => { res.send(user); })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('400 —  Некорректные данные при обновлении профиля'));
+        next(new ValidationError('400 —  Переданы некорректные данные при обновлении профиля'));
       } else {
         next(err);
       }
@@ -115,7 +114,7 @@ const updateAvatar = (req, res, next) => {
     .then((user) => { res.send(user); })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('400 —  Некорректные данные при обновлении аватара'));
+        next(new ValidationError('400 — Переданы некорректные данные при обновлении аватара'));
       } else {
         next(err);
       }
