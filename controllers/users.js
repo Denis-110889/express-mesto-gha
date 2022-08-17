@@ -21,11 +21,7 @@ const login = (req, res, next) => {
 
 const createUsers = (req, res, next) => {
   const {
-    name,
-    about,
-    avatar,
-    email,
-    password,
+    name, about, avatar, email, password,
   } = req.body;
 
   bcrypt.hash(password, 10)
@@ -40,7 +36,6 @@ const createUsers = (req, res, next) => {
           email: user.email,
         };
         res.status(201).send(data);
-        console.log(12345);
       })
       .catch((err) => {
         if (err.code === 11000) {
@@ -68,7 +63,9 @@ const returnUser = (req, res, next) => {
 const findUsersById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(new Error('NoValidId'))
-    .then((user) => res.send(user))
+    .then((user) => {
+      res.send(user);
+    })
     .catch((err) => {
       if (err.message === 'NoValidId') {
         next(new NoValidId('404 - Получение пользователя с несуществующим в БД id'));
@@ -87,11 +84,13 @@ const updateProfile = (req, res, next) => {
     req.user._id,
     { name, about },
     {
-      new: true,
-      runValidators: true,
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
     },
   )
-    .then((user) => { res.send(user); })
+    .then((user) => {
+      res.send(user);
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('400 —  Переданы некорректные данные при обновлении профиля'));
@@ -108,11 +107,13 @@ const updateAvatar = (req, res, next) => {
     req.user._id,
     { avatar },
     {
-      new: true,
-      runValidators: true,
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
     },
   )
-    .then((user) => { res.send(user); })
+    .then((user) => {
+      res.send(user);
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('400 — Переданы некорректные данные при обновлении аватара'));
