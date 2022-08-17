@@ -1,10 +1,10 @@
-const server = require('express');
+const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
-// const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 const {
   login,
   createUsers,
@@ -14,18 +14,20 @@ const { NotFound } = require('./errors/NotFound');
 
 const { REG_LINK } = require('./const/const');
 
-const app = server();
+const app = express();
 
-app.use(helmet()); // использование Helmet
-app.disable('x-powered-by'); // отключить заголовок X-Powered-By
-app.use(bodyParser.json()); // для собирания JSON-формата
-app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
+app.use(helmet());
+app.disable('x-powered-by');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const { PORT = 3000 } = process.env;
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
-
-// app.use(requestLogger); // подключаем логгер запросов
+mongoose.connect('mongodb://localhost:27017/mestodb', {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -53,12 +55,8 @@ app.use((req, res, next) => {
   next(new NotFound('404 - Страницы не существует'));
 });
 
-// app.use(errorLogger); // подключаем логгер ошибок
+app.use(errors());
 
-// обработчики ошибок
-app.use(errors()); // обработчик ошибок celebrate
-
-// здесь обрабатываем все ошибки
 app.use((err, req, res, next) => {
   if (err.statusCode) {
     return res.status(err.statusCode).send({ message: err.message });
