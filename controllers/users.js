@@ -20,23 +20,19 @@ const login = (req, res, next) => {
 };
 
 const createUsers = (req, res, next) => {
-  const {
-    name, about, avatar, email, password,
-  } = req.body;
-
-  bcrypt.hash(password, 10)
+  console.log(req.body);
+  bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
+      name: req.body.name,
+      about: req.body.about,
+      avatar: req.body.avatar,
+      email: req.body.email,
+      password: hash,
     })
-      .then((user) => {
-        const data = {
-          name: user.name,
-          about: user.about,
-          avatar: user.avatar,
-          email: user.email,
-        };
-        res.status(201).send(data);
-      })
+      .then((user) => res.status(201).send({
+        _id: user._id,
+        email: user.email,
+      }))
       .catch((err) => {
         if (err.code === 11000) {
           next(new ConflictError('409 - Пользователь с такой почтой уже существует'));
