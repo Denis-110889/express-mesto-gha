@@ -34,15 +34,9 @@ const deleteCards = (req, res, next) => {
         next(new NoValidId('404 - Карточка с указанным _id не найдена'));
       } else if (owner === req.user._id) {
         Card.findByIdAndRemove(req.params.cardId)
-          .orFail(new Error('NoValidId'))
+          .orFail(new NoValidId('404 - Карточка с указанным _id не найдена'))
           .then((cardDeleted) => res.send(cardDeleted))
-          .catch((err) => {
-            if (err.message === 'NoValidId') {
-              next(new NoValidId('404 - Карточка с указанным _id не найдена'));
-            } else {
-              next(err);
-            }
-          });
+          .catch((err) => { next(err); });
       } else {
         next(new NoPermission('403 — попытка удалить чужую карточку;'));
       }
