@@ -14,9 +14,7 @@ const login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'secret', { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch((err) => next(err));
 };
 
 const createUsers = (req, res, next) => {
