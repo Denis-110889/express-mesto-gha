@@ -58,17 +58,11 @@ const setLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(new Error('NoValidId'))
+    .orFail(new NoValidId('404 - Передан несуществующий _id карточки'))
     .then((card) => {
       res.send(card);
     })
-    .catch((err) => {
-      if (err.message === 'NoValidId') {
-        next(new NoValidId('404 — Передан несуществующий _id карточки'));
-      } else {
-        next(new Error('Ошибка. Что-то пошло не так...'));
-      }
-    });
+    .catch((err) => { next(err); });
 };
 
 const unsetLike = (req, res, next) => {
@@ -77,17 +71,11 @@ const unsetLike = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(new Error('NoValidId'))
+    .orFail(new NoValidId('404 - Передан несуществующий _id карточки'))
     .then((card) => {
       res.send(card);
     })
-    .catch((err) => {
-      if (err.message === 'NoValidId') {
-        next(new NoValidId('404 — Передан несуществующий _id карточки'));
-      } else {
-        next(new Error('Ошибка. Что-то пошло не так...'));
-      }
-    });
+    .catch((err) => { next(err); });
 };
 
 module.exports = {
