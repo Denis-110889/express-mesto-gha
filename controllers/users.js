@@ -60,14 +60,12 @@ const returnUser = (req, res, next) => {
 
 const findUsersById = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail(new Error('NoValidId'))
+    .orFail(new NoValidId('404 - Получение пользователя с несуществующим в БД id'))
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.message === 'NoValidId') {
-        next(new NoValidId('404 - Получение пользователя с несуществующим в БД id'));
-      } else if (err.message === 'CastError') {
+      if (err.message === 'CastError') {
         next(new CastError('400 —  Получение пользователя с некорректным id'));
       } else {
         next(err);
@@ -82,8 +80,8 @@ const updateProfile = (req, res, next) => {
     req.user._id,
     { name, about },
     {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
+      new: true,
+      runValidators: true,
     },
   )
     .then((user) => {
@@ -105,8 +103,8 @@ const updateAvatar = (req, res, next) => {
     req.user._id,
     { avatar },
     {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
+      new: true,
+      runValidators: true,
     },
   )
     .then((user) => {
