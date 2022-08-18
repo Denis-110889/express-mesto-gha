@@ -20,8 +20,6 @@ router.post('/cards', celebrate({
   }),
 }), createCards);
 
-// аналогично роуту users
-
 router.delete('/cards/:cardId', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().hex().required().length(24),
@@ -30,13 +28,13 @@ router.delete('/cards/:cardId', celebrate({
 
 router.put('/cards/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().length(24),
+    cardId: Joi.string().hex().required().length(24),
   }),
 }), setLike);
 
 router.delete('/cards/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().length(24),
+    cardId: Joi.string().hex().required().length(24),
   }),
 }), unsetLike);
 
